@@ -24,7 +24,7 @@ const Login = () => {
   });
   
   const onSubmit = data => {
-    console.log( data );
+    //console.log( data );
     navigate('/chat')
   }
 
@@ -38,7 +38,7 @@ const Login = () => {
           <Input leftIcon={<MdEmail />} label={'email'} type={'email'} placeHolder={'type your email'} errorMessage={errors.email?.message} register={register} registerName={'email'}/>
           <Input leftIcon={<MdPassword />} label={'password'} type={'password'} placeHolder={'********'} errorMessage={errors.password?.message} register={register} registerName={'password'}/>
           <Center> <Link to={'/'}>Forgot password?</Link> </Center>
-          <Button isValid={isValid} title={'Sign in'} type="submit"/>
+          <Button variant={'userauth'} isValid={isValid} title={'Sign in'} type="submit"/>
         </form>
       </LoginScreenBox>
     </Container>

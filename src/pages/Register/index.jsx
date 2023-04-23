@@ -25,7 +25,7 @@ const Register = () => {
   });
 
   const onSubmit = data => {
-    console.log( data );
+    //console.log( data );
     navigate('/')
   }
 
@@ -39,7 +39,7 @@ const Register = () => {
           <Input leftIcon={<MdPassword />} label={'password'} type={'password'} placeHolder={'********'} errorMessage={errors.password?.message} register={register} registerName={'password'}/>
           <Input leftIcon={<MdPassword />} label={'comfirm password'} type={'password'} placeHolder={'********'} errorMessage={errors.password?.message} register={register} registerName={'confirmPassword'}/>
           <Center> Already have an account? <Link to={'/'}>Sign in</Link> </Center>
-          <Button isValid={isValid} title={'Sign up'}/>
+          <Button variant={'userauth'} isValid={isValid} title={'Sign up'}/>
         </form>
       </LoginScreenBox>
     </Container>
