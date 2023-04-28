@@ -6,6 +6,21 @@ import Button from '../../components/Button'
 import ChatMessages from '../../components/ChatMessages'
 import { useNavigate } from 'react-router-dom'
 
+
+function autoResize(event) {
+  if (event.target.scrollHeight < '130') {
+    event.target.style.height = 'auto';
+    event.target.style.height = (event.target.scrollHeight-10) + 'px';
+  }
+}
+
+function scrollOnSend() {
+  const scroll = document.getElementById('answers')
+  setTimeout(() => {
+    scroll.scrollTop = scroll.scrollHeight
+  }, 100)
+}
+
 const Chat = () => {
 
   const navigate = useNavigate()
@@ -14,28 +29,20 @@ const Chat = () => {
   const [messages, setMessages] = useState([])
   const [chatId, setChatId] = useState(0)
 
-  function creatChat(){
+  function createChat(){
     if(messages.length === 0) {
       setChatId(chatId + 1)
     }
   }
 
-  function handleChange(event) {
-    setInputValue(event.target.value);
-  }
-
   function handleInput() {
-    creatChat()
-    const newMessage = { text: inputValue };
-    setMessages([...messages, newMessage]);
-    setInputValue('');
-  }
-
-  function autoResize(event) {
-    if (event.target.scrollHeight < '130') {
-      event.target.style.height = 'auto';
-      event.target.style.height = (event.target.scrollHeight-10) + 'px';
-    }
+    if(inputValue.length !== 0){
+      createChat()
+      const newMessage = { text: inputValue, type: 'send' }
+      setMessages([...messages, newMessage])
+      setInputValue('')
+      scrollOnSend()
+    } 
   }
 
   function clearScreen() {
@@ -44,6 +51,7 @@ const Chat = () => {
 
   function clearConversations() {
     setChatId(0)
+    clearScreen()
   }
 
   function handleLogout() {
@@ -72,18 +80,16 @@ const Chat = () => {
         </Options>
       </MenuBar>
       <ChatContainer>
-        <ChatAnswers>
+        <ChatAnswers id='answers'>
           {messages.length !== 0 ? 
             <ChatMessages messages={messages}/>
           :
-            <ChatExamples>
-              ola
-            </ChatExamples>
+            <ChatExamples setInputValue={setInputValue}/>
           }
         </ChatAnswers>
         <ChatInput>
           <div>
-            <textarea value={inputValue} onChange={handleChange} onInput={autoResize} placeholder='Send Message...' required></textarea>
+            <textarea value={inputValue} onChange={(e) => setInputValue(e.target.value)} onInput={autoResize} placeholder='Send Message...'></textarea>
             <Button onClick={handleInput} variant={'sendbutton'} title={'Send'} leftIcon={<AiOutlineSend/>}/>
           </div>
         </ChatInput>

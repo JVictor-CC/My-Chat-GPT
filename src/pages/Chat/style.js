@@ -21,6 +21,8 @@ export const ChatAnswers = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
 `
 
 export const ChatInput = styled.div`

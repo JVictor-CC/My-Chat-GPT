@@ -37,7 +37,7 @@ const Register = () => {
           <Center><h1>Create Your account</h1></Center>
           <Input leftIcon={<MdEmail />} label={'email'} type={'email'} placeHolder={'type your email'} errorMessage={errors.email?.message} register={register} registerName={'email'}/>
           <Input leftIcon={<MdPassword />} label={'password'} type={'password'} placeHolder={'********'} errorMessage={errors.password?.message} register={register} registerName={'password'}/>
-          <Input leftIcon={<MdPassword />} label={'comfirm password'} type={'password'} placeHolder={'********'} errorMessage={errors.password?.message} register={register} registerName={'confirmPassword'}/>
+          <Input leftIcon={<MdPassword />} label={'comfirm password'} type={'password'} placeHolder={'********'} errorMessage={errors.confirmPassword?.message} register={register} registerName={'confirmPassword'}/>
           <Center> Already have an account? <Link to={'/'}>Sign in</Link> </Center>
           <Button variant={'userauth'} isValid={isValid} title={'Sign up'}/>
         </form>

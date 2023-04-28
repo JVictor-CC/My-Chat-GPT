@@ -1,13 +1,14 @@
 import React from 'react'
-import { MessageContainer, MessagesList } from './style'
+import { MessageContainer } from './style'
 import { AiOutlineUser } from 'react-icons/ai'
+import { DiAtom } from 'react-icons/di'
 
 
-const SentMessage = ({text}) => {
+const MessageBox = ({text, type = ''}) => {
   return (
-    <MessageContainer>
+    <MessageContainer variant={type}>
       <div>
-        <span><AiOutlineUser/></span><p id='chat-input'>{text}</p>
+        {type === 'send' ? <span><AiOutlineUser /></span> : <span><DiAtom /></span>} <p>{text}</p>
       </div>
     </MessageContainer>
   )
@@ -15,11 +16,12 @@ const SentMessage = ({text}) => {
 
 const ChatMessages = (chat) => {
   return (
-    <MessagesList>
-      {chat.messages.map((message, index) => (
-        <SentMessage key={index} text={message.text}/>
-      ))}
-    </MessagesList>
+    <div>
+      {chat.messages.map((message, index) => (<>
+        <MessageBox key={index} text={message.text} type={message.type}/>
+        <MessageBox key={index} text={'Resposta da IA'}/>
+      </>))}
+    </div>
   )
 }
 

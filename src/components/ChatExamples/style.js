@@ -4,9 +4,14 @@ export const ChatExample = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     flex-wrap: nowrap;
+`
+
+export const Icon = styled.span`
+    font-size: 32px;
 `
 
 export const Examples = styled.div`

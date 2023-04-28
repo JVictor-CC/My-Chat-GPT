@@ -1,16 +1,17 @@
-import styled from 'styled-components'
-
-export const MessagesList = styled.div`
-    
-`
+import styled, { css } from 'styled-components'
 
 export const MessageContainer = styled.div`
     width: 100%;
-    background-color: lightgray;
+    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-bottom: solid 1px gray;
+
+    ${({variant}) => variant === 'send' && css`
+        background-color: lightgray;
+        border-top: solid 1px gray;
+        border-bottom: solid 1px gray;
+    `} 
 
     div{
         width: 100%;
@@ -27,5 +28,6 @@ export const MessageContainer = styled.div`
     p{
         white-space: pre-wrap;
         word-wrap: break-word;
+        word-break: break-all;
     }
 `
