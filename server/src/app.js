@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 const server = express()
+server.use(express.json())
 server.use(cors())
 server.use(router)
 
