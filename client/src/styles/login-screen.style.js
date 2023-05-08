@@ -16,7 +16,7 @@ export const Container = styled.div`
 export const LoginScreenBox = styled.div`
     border-radius: 5px;
     width: 550px;
-    height: 600px;
+    height: fit-content;
     padding: 30px;
     background-color: #202123;
     box-shadow: 0px 0px 10px 2px #000;

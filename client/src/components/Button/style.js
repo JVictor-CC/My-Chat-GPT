@@ -49,11 +49,17 @@ export const ButtonContainer = styled.button`
     `}   
 
     ${({variant}) => variant === 'sendbutton' && css`
+        min-height: 50px;
         flex-direction: row-reverse;
         justify-content: center;
         align-items: center;
-        background-color: #6e6e80;
+        background-color: #5a5b5f;
         width: 100px;
+
+        &:disabled{
+            background-color: #6e6e80;
+            cursor: default;
+        }
     `} 
 `
 

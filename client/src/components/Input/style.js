@@ -27,7 +27,7 @@ export const InputContainer = styled.div`
 `
 
 export const IconContainer = styled.div`
-    padding: 9px;
+    padding: 7px;
     font-size: 20px;
     color: #66645D;
     margin: 0;
@@ -55,7 +55,7 @@ export const DisplayError = styled.div`
 
     p{
         font-size: 14px;
-        transform: translate(4%, 40%) scaleY(1);
+        transform: translate(4%, 35%) scaleY(1);
         transition: transform 0.5s;
     }
 `

@@ -17,10 +17,9 @@ const MessageBox = ({text, type = ''}) => {
 const ChatMessages = (chat) => {
   return (
     <div>
-      {chat.messages.map((message, index) => (<>
-        <MessageBox key={index} text={message.text} type={message.type}/>
-        <MessageBox key={index} text={'Resposta da IA'}/>
-      </>))}
+      {chat.messages.map((message, index) => (
+        <MessageBox key={index} text={message.prompt} type={message.type}/>
+      ))}
     </div>
   )
 }

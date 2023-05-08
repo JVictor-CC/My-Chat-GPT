@@ -28,6 +28,5 @@ export const MessageContainer = styled.div`
     p{
         white-space: pre-wrap;
         word-wrap: break-word;
-        word-break: break-all;
     }
 `

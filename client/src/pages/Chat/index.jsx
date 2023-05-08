@@ -5,6 +5,8 @@ import { AiOutlineUser, AiOutlinePlus, AiOutlineDelete, AiOutlineLogout, AiOutli
 import Button from '../../components/Button'
 import ChatMessages from '../../components/ChatMessages'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import Spinner from 'react-bootstrap/Spinner'
 
 
 function autoResize(event) {
@@ -28,6 +30,7 @@ const Chat = () => {
   const [inputValue, setInputValue] = useState('')
   const [messages, setMessages] = useState([])
   const [chatId, setChatId] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   function createChat(){
     if(messages.length === 0) {
@@ -35,13 +38,24 @@ const Chat = () => {
     }
   }
 
-  function handleInput() {
+  async function handleInput() {
     if(inputValue.length !== 0){
-      createChat()
-      const newMessage = { text: inputValue, type: 'send' }
-      setMessages([...messages, newMessage])
-      setInputValue('')
-      scrollOnSend()
+      try{
+        createChat()
+        setLoading(true)
+        const newMessage = { prompt: inputValue, type: 'send' }
+        setMessages([...messages, newMessage])
+        setInputValue('')
+        scrollOnSend()
+        const response = await axios.post( 'http://localhost:8080/sendMessage', newMessage)
+        const responseMessage = {prompt: response.data.data, type: 'receive'}
+        setMessages([...messages, newMessage, responseMessage])
+        scrollOnSend()
+      }catch (error) {
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
     } 
   }
 
@@ -90,7 +104,7 @@ const Chat = () => {
         <ChatInput>
           <div>
             <textarea value={inputValue} onChange={(e) => setInputValue(e.target.value)} onInput={autoResize} placeholder='Send Message...'></textarea>
-            <Button onClick={handleInput} variant={'sendbutton'} title={'Send'} leftIcon={<AiOutlineSend/>}/>
+            {loading ? <Button isValid={!loading} variant={'sendbutton'} title={<Spinner style={{fontSize: '32px'}} animation="border" variant="light" />}/>  : <Button onClick={handleInput} variant={'sendbutton'} title={'Send'} leftIcon={<AiOutlineSend/>}/> }
           </div>
         </ChatInput>
       </ChatContainer>
