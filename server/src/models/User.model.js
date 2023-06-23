@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import ChatSchema from './Chat.model.js'
 
 const Schema = mongoose.Schema
 
@@ -17,7 +18,8 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'Pelase enter a Password'],
         unique: false
-    }
+    },
+    chats: [ChatSchema]
 })
 
 const User = mongoose.model('user', UserSchema)
