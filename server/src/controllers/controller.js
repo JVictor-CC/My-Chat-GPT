@@ -11,17 +11,17 @@ export const loginUser = async (req, res) => {
     try {
         const user = await UserModel.findOne({email: data.email})
         if(!user) {
-            return res.status(401).json({
+            return res.status(200).json({
                 success: false,
-                data: 'Invalid email or password!'
-            });
+                message: 'Invalid email or password!'
+            })
         }
         const matchPassword = await bcrypt.compare(data.password, user.password)
         if(!matchPassword) {
-            return res.status(401).json({
+            return res.status(200).json({
                 success: false,
-                data: 'Invalid email or password!'
-            });
+                message: 'Invalid email or password!'
+            })
         }
 
         // * Autenticate User JWT
@@ -31,21 +31,19 @@ export const loginUser = async (req, res) => {
             email: user.email
         }, process.env.JWT_SECRET, {expiresIn: '24h'})
 
-        return res.status(200).json(
-            {
-                sucess: true,
-                data: {
-                    message: 'Successfully signed in',
-                    email: user.email,
-                    token
-                }
+        return res.status(200).json({
+            success: true,
+            message: 'Successfully signed in!',
+            token: {
+                email: user.email,
+                token
             }
-        )
+        })
     } catch (error) {
         return res.status(500).json(
             {
-                sucess: false,
-                data: error.message
+                success: false,
+                message: error.message
             }
         )
     }   
@@ -56,9 +54,9 @@ export const registerUser = async (req, res) => {
     try {
         const emailExists = await UserModel.findOne({email: data.email})
         if(emailExists) {
-            return res.status(401).json({
+            return res.status(200).json({
                 success: false,
-                data: 'Email already exists'
+                message: 'Email already exists!'
             })
         }
 
@@ -72,15 +70,15 @@ export const registerUser = async (req, res) => {
 
         return res.status(200).json(
             {
-                sucess: true,
-                data: 'User successfully registered'
+                success: true,
+                message: 'User successfully registered!'
             }
         )
     } catch (error) {
         return res.status(500).json(
             {
-                sucess: false,
-                data: error.message
+                success: false,
+                message: error.message
             }
         )
     }  
@@ -90,14 +88,24 @@ export const sendMessage = async (req, res) => {
     try {
 
         const userEmail = req.user.email
-        const prompt = req.body.prompt
+        const prompt = req.body.message
+        const chatIndex = req.body.chatIndex
+        const chatName = req.body.chatName
         const user = await UserModel.findOne({email: userEmail})
+        
+        if(chatIndex === null) {
+            user.chats.push({
+                title: `${chatName}`,
+                messages: []
+            })
+            user.save()
+        }
 
-        user.chats[0].messages.push({
+        user.chats[chatIndex].messages.push({
             text: `${prompt}`,
             sender: 'user'
         })
-
+        
         const response = await openai.createCompletion({
             model: "text-davinci-003",
             prompt: `${prompt}`,
@@ -108,17 +116,17 @@ export const sendMessage = async (req, res) => {
             presence_penalty: 0,
         })
 
-        user.chats[0].messages.push({
+        user.chats[chatIndex].messages.push({
             text: `${response.data.choices[0].text}`,
             sender: 'fake-gpt'
         })
-
+        
         user.save()
 
         return res.status(200).json(
             {
                 success: true,
-                data: response.data.choices[0].text
+                data: `${response.data.choices[0].text}`
             }
         )
     } catch (error) {
@@ -131,31 +139,12 @@ export const sendMessage = async (req, res) => {
     }
 }
 
-export const getUser = async (req, res) => {
-    const { email } = req.params
 
-    try {
-        if (!email){
-            return res.status(501).json({ error: 'Invalid email' })
-        }
-
-        const user = await UserModel.findOne({email: email})
-
-        if (!user){
-            return res.status(501).json({ error: 'Couldnt find the email' })
-        }
-
-        return res.status(201).json(user)
-
-    } catch (error) {
-        return res.status(404).json({ error: 'User not found!' })
-    }
-}
 
 export const authenticate = async (req, res, next) => {
     try {
         const token = req.headers.authorization?.split(' ')[1]
-        const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
+        const decodedToken = await jwt.verify(token, process.env.JWT_SECRET)
         req.user = decodedToken
         next()
 
@@ -179,7 +168,8 @@ export const createChat = async (req, res) => {
         return res.status(200).json(
             {
                 sucess: true,
-                data: "Chat successfully created!"
+                data: "Chat successfully created!",
+                chats: user.chats
             }
         )
     } catch (error) {
@@ -193,22 +183,75 @@ export const createChat = async (req, res) => {
     
 }
 
-export const saveChat = async (req, res) => {}
+export const loadChats = async (req, res) => {
+    try {
+        const userEmail = req.user.email
+        const user = await UserModel.findOne({email: userEmail})
+        return res.status(200).json({ chats: user.chats })
+        
+    } catch (error) {
+        return res.status(500).json({ error: error.message})
+    }
+}
 
-export const loadChats = async (req, res) => {}
+export const deleteChats = async (req, res) => {
+    try {
+        const userEmail = req.user.email
+        const chatId = req.body.id
+        const user = await UserModel.findOne({email: userEmail})     
+        user.chats.splice(id, 1)
+        user.save()
+        return res.status(200).json({ message: "Chat deleted!" })
+        
+    } catch (error) {
+        return res.status(500).json({ error: error.message})
+    }
+}
+
+export const deleteAllChats = async (req, res) => {
+    try {
+        const userEmail = req.user.email
+        const result = await UserModel.updateOne({ email: userEmail }, { chats: [] })
+
+        return res.status(200).json({ message: "All chats deleted!" })
+        
+    } catch (error) {
+        return res.status(500).json({ error: error.message})
+    }
+}
 
 export const deleteUser = async (req, res) => {
     const data = req.body
     try {
-        const deletedUser = await UserModel.findOneAndDelete({ email: data.email });
+        const deletedUser = await UserModel.findOneAndDelete({ email: data.email })
         
         if (!deletedUser) {
-          return res.status(404).json({ error: 'User not found' });
+          return res.status(404).json({ error: 'User not found' })
         }
     
-        return res.status(200).json({ message: 'User deleted successfully' });
+        return res.status(200).json({ message: 'User deleted successfully' })
       } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Could not delete user' });
+        return res.status(500).json({ error: 'Could not delete user' })
       }
+}
+
+export const getUser = async (req, res) => {
+    const { email } = req.params
+
+    try {
+        if (!email){
+            return res.status(501).json({ error: 'Invalid email' })
+        }
+
+        const user = await UserModel.findOne({email: email})
+
+        if (!user){
+            return res.status(501).json({ error: 'Couldnt find the email' })
+        }
+
+        return res.status(201).json(user)
+
+    } catch (error) {
+        return res.status(404).json({ error: 'User not found!' })
+    }
 }

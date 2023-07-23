@@ -1,5 +1,5 @@
 import express from 'express'
-import { createChat, loginUser, registerUser, saveChat, sendMessage, deleteUser, loadChats, loadChatMessages, authenticate, getUser } from '../controllers/controller.js'
+import { createChat, loginUser, registerUser, sendMessage, deleteUser, loadChats, authenticate, getUser, deleteChats, deleteAllChats } from '../controllers/controller.js'
 
 const router = express.Router()
 
@@ -11,11 +11,13 @@ router.post('/sendMessage', authenticate, sendMessage)
 
 router.post('/createChat', authenticate, createChat)
 
-router.put('/saveChat', saveChat)
-
 router.get('/user/:email', getUser)
 
-router.get('/loadChats', loadChats)
+router.get('/loadChats', authenticate, loadChats)
+
+router.put('/deleteChats', authenticate, deleteChats)
+
+router.put('/deleteAllChats', authenticate, deleteAllChats)
 
 router.delete('/deleteUser', deleteUser)
 
