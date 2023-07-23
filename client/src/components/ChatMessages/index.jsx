@@ -8,7 +8,7 @@ const MessageBox = ({text, type = ''}) => {
   return (
     <MessageContainer variant={type}>
       <div>
-        {type === 'send' ? <span><AiOutlineUser /></span> : <span><DiAtom /></span>} <p>{text}</p>
+        {type === 'user' ? <span><AiOutlineUser /></span> : <span><DiAtom /></span>} <p>{text}</p>
       </div>
     </MessageContainer>
   )
@@ -18,7 +18,7 @@ const ChatMessages = (chat) => {
   return (
     <div>
       {chat.messages.map((message, index) => (
-        <MessageBox key={index} text={message.prompt} type={message.type}/>
+        <MessageBox key={index} text={message.text} type={message.sender}/>
       ))}
     </div>
   )

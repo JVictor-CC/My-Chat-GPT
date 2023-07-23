@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, ChatContainer, MenuBar, History, Options, ChatAnswers, ChatInput } from './style'
 import ChatExamples from '../../components/ChatExamples'
 import { AiOutlineUser, AiOutlinePlus, AiOutlineDelete, AiOutlineLogout, AiOutlineSetting, AiOutlineMessage, AiOutlineSend } from 'react-icons/ai'
 import Button from '../../components/Button'
 import ChatMessages from '../../components/ChatMessages'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import Spinner from 'react-bootstrap/Spinner'
+import { createChat, deleteAllChats, loadChats, sendMessage } from '../../services/chat'
 
 
 function autoResize(event) {
   if (event.target.scrollHeight < '130') {
-    event.target.style.height = 'auto';
-    event.target.style.height = (event.target.scrollHeight-10) + 'px';
+    event.target.style.height = 'auto'
+    event.target.style.height = (event.target.scrollHeight-10) + 'px'
   }
 }
 
@@ -29,26 +29,32 @@ const Chat = () => {
 
   const [inputValue, setInputValue] = useState('')
   const [messages, setMessages] = useState([])
-  const [chatId, setChatId] = useState(0)
+  const [chats, setChats] = useState([])
+  const [chatCount, setChatCount] = useState(0)
+  const [selectedChat, setSelectedChat] = useState()
   const [loading, setLoading] = useState(false)
 
-  function createChat(){
-    if(messages.length === 0) {
-      setChatId(chatId + 1)
-    }
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('userToken')
+    loadChats(token)
+    .then(data => {
+      setChats(data)
+      setChatCount(data.length)
+    })
+}, [])
 
   async function handleInput() {
     if(inputValue.length !== 0){
       try{
-        createChat()
+        const token = localStorage.getItem('userToken')
         setLoading(true)
-        const newMessage = { prompt: inputValue, type: 'send' }
+        const newMessage = { text: inputValue, sender: 'user' }
         setMessages([...messages, newMessage])
         setInputValue('')
         scrollOnSend()
-        const response = await axios.post( 'http://localhost:8080/sendMessage', newMessage)
-        const responseMessage = {prompt: response.data.data, type: 'receive'}
+        const response = await sendMessage(token, newMessage, selectedChat)
+        console.log(response)
+        const responseMessage = {text: response.data.data, sender: 'fake-gpt'}
         setMessages([...messages, newMessage, responseMessage])
         scrollOnSend()
       }catch (error) {
@@ -59,16 +65,24 @@ const Chat = () => {
     } 
   }
 
+  function loadMessages(chat) {
+    setMessages(chat.messages)
+  }
+
   function clearScreen() {
     setMessages([])
   }
 
   function clearConversations() {
-    setChatId(0)
+    const token = localStorage.getItem('userToken')
+    console.log(token)
+    deleteAllChats(token).then(()=>
+    setChatCount(0))
     clearScreen()
   }
 
   function handleLogout() {
+    localStorage.clear()
     navigate('/')
   }
 
@@ -76,12 +90,20 @@ const Chat = () => {
     <Container>
       <MenuBar>
         <History>
-          <Button onClick={clearScreen} variant={'newchat'} title={'New Chat'} leftIcon={<AiOutlinePlus/>}/>
+          <Button onClick={() => {clearScreen(); const token = localStorage.getItem('userToken'); createChat(token, `Chat ${chatCount}`).then(data => {setChats(data); setChatCount(data.length)})}} variant={'newchat'} title={'New Chat'} leftIcon={<AiOutlinePlus/>}/>
           <br />
-          {chatId !==0 ? 
-            Array(chatId).fill(null).map((_, index) => (
-                <Button key={index} leftIcon={<AiOutlineMessage/>} title={`Chat ${index + 1}`}/>
-              ))
+          { chats && chats.length !==0 ? 
+            chats.map((chat, index) => (
+              <Button key={index} leftIcon={<AiOutlineMessage/>} title={`${chat.title}`} onClick={() => {
+                loadMessages(chat); 
+                setSelectedChat(index); 
+                const token = localStorage.getItem('userToken')
+                loadChats(token)
+                .then(data => {
+                  setChats(data)
+                })
+              }}/>
+          ))
           :
             null
           }

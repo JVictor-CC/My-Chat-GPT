@@ -8,6 +8,7 @@ import { MdEmail, MdPassword } from 'react-icons/md'
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import { loginUser } from '../../services/auth'
 
 const schema = yup.object({
   email: yup.string().required('Email Required!').email('Invalid Email'),
@@ -23,9 +24,14 @@ const Login = () => {
     reValidateMode: 'onChange'
   });
   
-  const onSubmit = data => {
+  const onSubmit = async data => {
     //console.log( data );
-    navigate('/chat')
+    const login = await loginUser(data.email, data.password)
+    console.log(login.token)
+    if(login){
+      localStorage.setItem('userToken', login.token);
+      navigate('/chat')
+    }
   }
 
   return (<>

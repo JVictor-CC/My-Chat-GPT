@@ -7,7 +7,7 @@ export const MessageContainer = styled.div`
     justify-content: center;
     align-items: center;
 
-    ${({variant}) => variant === 'send' && css`
+    ${({variant}) => variant === 'user' && css`
         background-color: lightgray;
         border-top: solid 1px gray;
         border-bottom: solid 1px gray;
