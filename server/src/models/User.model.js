@@ -6,7 +6,7 @@ const Schema = mongoose.Schema
 const UserSchema = new Schema({
     username: {
         type: String,
-        required: [true, 'Pelase enter a unique Username'],
+        required: [true, 'Pelase enter a Username'],
         unique: false
     },
     email: {

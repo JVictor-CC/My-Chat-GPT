@@ -7,7 +7,6 @@ const ChatSchema = new Schema({
     title: {
         type: String,
         required: true,
-        unique: true
     },
     messages: [MessageSchema]
 })

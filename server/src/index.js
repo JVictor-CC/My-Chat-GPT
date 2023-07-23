@@ -7,12 +7,11 @@ dotenv.config()
 const port = process.env.PORT
 const uri = process.env.MONGODB_ATLAS_URI
 
-const startServer = async () => {
+const startServer = () => {
     try {
-        await connectToDB(uri)
-        server.listen(port, () => {
+        connectToDB(uri).then(() => server.listen(port, () => {
             console.log(`Servidor iniciado na em: http://localhost:${port}/`)
-        })
+        }))
     } catch(error) {
         console.log('Could not start the server!')
     }
