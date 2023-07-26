@@ -37,7 +37,8 @@ export async function loadChats(token) {
 
 export async function deleteAllChats(token) {
     try {
-        const response = await axios.put('http://localhost:8080/deleteAllChats', {
+        const response = await axios.put('http://localhost:8080/deleteAllChats', {},
+        {
             headers: {
                 Authorization: 'Bearer ' + token 
             }

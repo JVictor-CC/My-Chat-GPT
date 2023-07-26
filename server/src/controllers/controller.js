@@ -121,7 +121,7 @@ export const sendMessage = async (req, res) => {
             sender: 'fake-gpt'
         })
         
-        user.save()
+        await user.save()
 
         return res.status(200).json(
             {
@@ -164,7 +164,7 @@ export const createChat = async (req, res) => {
             title: `${chatName}`,
             messages: []
         })
-        user.save()
+        await user.save()
         return res.status(200).json(
             {
                 sucess: true,
@@ -200,7 +200,7 @@ export const deleteChats = async (req, res) => {
         const chatId = req.body.id
         const user = await UserModel.findOne({email: userEmail})     
         user.chats.splice(id, 1)
-        user.save()
+        await user.save()
         return res.status(200).json({ message: "Chat deleted!" })
         
     } catch (error) {
@@ -211,8 +211,9 @@ export const deleteChats = async (req, res) => {
 export const deleteAllChats = async (req, res) => {
     try {
         const userEmail = req.user.email
-        const result = await UserModel.updateOne({ email: userEmail }, { chats: [] })
-
+        const user = await UserModel.findOne({email: userEmail})
+        user.chats = []
+        await user.save()
         return res.status(200).json({ message: "All chats deleted!" })
         
     } catch (error) {

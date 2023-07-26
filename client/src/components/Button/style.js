@@ -7,6 +7,7 @@ export const ButtonContainer = styled.button`
     padding: 10px;
     width: 100%;
     margin: 0;
+    margin-bottom: 5px;
     font-weight: 400;
     font-size: 14px;
     cursor: pointer;
@@ -60,7 +61,12 @@ export const ButtonContainer = styled.button`
             background-color: #6e6e80;
             cursor: default;
         }
-    `} 
+    `}
+
+    ${({active}) => active === true && css`
+        border: solid 1px #6e6e80;
+        background-color: #3a3a3e;
+    `}
 `
 
 export const IconContainer = styled.span`

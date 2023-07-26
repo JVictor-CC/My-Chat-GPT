@@ -73,12 +73,31 @@ const Chat = () => {
     setMessages([])
   }
 
-  function clearConversations() {
+  async function clearConversations() {
     const token = localStorage.getItem('userToken')
     console.log(token)
-    deleteAllChats(token).then(()=>
-    setChatCount(0))
+    await deleteAllChats(token)
+    setChatCount(0)
+    const data = await loadChats(token)
+    setChats(data)
     clearScreen()
+  }
+
+  async function handleNewChat () {
+    clearScreen()
+    const token = localStorage.getItem('userToken')
+    const data = await createChat(token, `Chat ${chatCount}`)
+    setChats(data)
+    setChatCount(data.length)
+    setSelectedChat(chatCount)
+  }
+
+  async function handleLoadChats (chat, index) {
+    loadMessages(chat)
+    setSelectedChat(index)
+    const token = localStorage.getItem('userToken')
+    const data = await loadChats(token)
+    setChats(data)
   }
 
   function handleLogout() {
@@ -90,26 +109,18 @@ const Chat = () => {
     <Container>
       <MenuBar>
         <History>
-          <Button onClick={() => {clearScreen(); const token = localStorage.getItem('userToken'); createChat(token, `Chat ${chatCount}`).then(data => {setChats(data); setChatCount(data.length)})}} variant={'newchat'} title={'New Chat'} leftIcon={<AiOutlinePlus/>}/>
+          <Button onClick={handleNewChat} variant={'newchat'} title={'New Chat'} leftIcon={<AiOutlinePlus/>}/>
           <br />
           { chats && chats.length !==0 ? 
             chats.map((chat, index) => (
-              <Button key={index} leftIcon={<AiOutlineMessage/>} title={`${chat.title}`} onClick={() => {
-                loadMessages(chat); 
-                setSelectedChat(index); 
-                const token = localStorage.getItem('userToken')
-                loadChats(token)
-                .then(data => {
-                  setChats(data)
-                })
-              }}/>
+              <Button key={index} active={index === selectedChat} leftIcon={<AiOutlineMessage/>} title={`${chat.title}`} onClick={() => handleLoadChats(chat, index)}/>
           ))
           :
             null
           }
         </History>
         <Options>
-          <Button onClick={clearConversations} title={'Clear conversations'} leftIcon={<AiOutlineDelete/>}/>
+          <Button onClick={clearConversations} title={'Clear Conversations'} leftIcon={<AiOutlineDelete/>}/>
           <Button title={'Upgrade to Plus'} leftIcon={<AiOutlineUser/>}/>
           <Button title={'Settings'} leftIcon={<AiOutlineSetting/>}/>
           <Button title={'Log out'} onClick={handleLogout} leftIcon={<AiOutlineLogout/>}/>
