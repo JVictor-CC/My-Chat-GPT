@@ -4,16 +4,16 @@ import { BsSun } from 'react-icons/bs'
 import { IoWarningOutline } from 'react-icons/io5'
 import { AiOutlineThunderbolt } from 'react-icons/ai'
 
-const ChatExamples = ({setInputValue}) => {
+const ChatExamples = ({presetInputValue}) => {
   return (
     <ChatExample>
         <Examples>
             <div>
                 <Icon><BsSun/></Icon>
                 <h1>Examples</h1>
-                <p style={{cursor: 'pointer'}} onClick={(e) => setInputValue(e.target.textContent)}>"Explain quantum computing in simple terms"</p>
-                <p style={{cursor: 'pointer'}} onClick={(e) => setInputValue(e.target.textContent)}>"Got any creative ideas for a 10 year old's birthday"</p>
-                <p style={{cursor: 'pointer'}} onClick={(e) => setInputValue(e.target.textContent)}>"How do I make an http request in javascript"</p>
+                <p style={{cursor: 'pointer'}} onClick={(e) => presetInputValue(e.target.textContent)}>"Explain quantum computing in simple terms"</p>
+                <p style={{cursor: 'pointer'}} onClick={(e) => presetInputValue(e.target.textContent)}>"Got any creative ideas for a 10 year old's birthday"</p>
+                <p style={{cursor: 'pointer'}} onClick={(e) => presetInputValue(e.target.textContent)}>"How do I make an http request in javascript"</p>
             </div>
             <div>
                 <Icon><AiOutlineThunderbolt/></Icon>

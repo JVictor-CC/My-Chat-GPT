@@ -1,27 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Container, ChatContainer, MenuBar, History, Options, ChatAnswers, ChatInput } from './style'
 import ChatExamples from '../../components/ChatExamples'
-import { AiOutlineUser, AiOutlinePlus, AiOutlineDelete, AiOutlineLogout, AiOutlineSetting, AiOutlineMessage, AiOutlineSend } from 'react-icons/ai'
+import { AiOutlinePlus, AiOutlineDelete, AiOutlineLogout, AiOutlineSetting, AiOutlineMessage, AiOutlineSend } from 'react-icons/ai'
 import Button from '../../components/Button'
 import ChatMessages from '../../components/ChatMessages'
 import { useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/Spinner'
 import { createChat, deleteAllChats, loadChats, sendMessage } from '../../services/chat'
-
-
-function autoResize(event) {
-  if (event.target.scrollHeight < '130') {
-    event.target.style.height = 'auto'
-    event.target.style.height = (event.target.scrollHeight-10) + 'px'
-  }
-}
-
-function scrollOnSend() {
-  const scroll = document.getElementById('answers')
-  setTimeout(() => {
-    scroll.scrollTop = scroll.scrollHeight
-  }, 100)
-}
 
 const Chat = () => {
 
@@ -34,6 +19,10 @@ const Chat = () => {
   const [selectedChat, setSelectedChat] = useState()
   const [loading, setLoading] = useState(false)
 
+  const [inputHeight, setInputHeight] = useState('auto')
+
+  const autoScrollRef = useRef(null)
+
   useEffect(() => {
     const token = localStorage.getItem('userToken')
     loadChats(token)
@@ -41,23 +30,36 @@ const Chat = () => {
       setChats(data)
       setChatCount(data.length)
     })
-}, [])
+  }, [])
+
+  function autoResize(event) {
+    if (event.target.scrollHeight < 130 & event.target.scrollHeight >= 60) {
+      setInputHeight(`${event.target.scrollHeight}px`)
+    }
+  }
+
+  function autoScroll() {
+    if (autoScrollRef.current) {
+      setTimeout(() => {
+        autoScrollRef.current.scrollTop = autoScrollRef.current.scrollHeight
+      }, 100)
+    }
+  }
 
   async function handleInput() {
     if(inputValue.length !== 0){
-      try{
+      try {
         const token = localStorage.getItem('userToken')
         setLoading(true)
         const newMessage = { text: inputValue, sender: 'user' }
         setMessages([...messages, newMessage])
         setInputValue('')
-        scrollOnSend()
+        autoScroll()
         const response = await sendMessage(token, newMessage, selectedChat)
-        console.log(response)
         const responseMessage = {text: response.data.data, sender: 'fake-gpt'}
         setMessages([...messages, newMessage, responseMessage])
-        scrollOnSend()
-      }catch (error) {
+        autoScroll()
+      } catch (error) {
         console.log(error)
       } finally {
         setLoading(false)
@@ -75,7 +77,6 @@ const Chat = () => {
 
   async function clearConversations() {
     const token = localStorage.getItem('userToken')
-    console.log(token)
     await deleteAllChats(token)
     setChatCount(0)
     const data = await loadChats(token)
@@ -111,32 +112,31 @@ const Chat = () => {
         <History>
           <Button onClick={handleNewChat} variant={'newchat'} title={'New Chat'} leftIcon={<AiOutlinePlus/>}/>
           <br />
-          { chats && chats.length !==0 ? 
+          { chats && chats.length !== 0 ? 
             chats.map((chat, index) => (
-              <Button key={index} active={index === selectedChat} leftIcon={<AiOutlineMessage/>} title={`${chat.title}`} onClick={() => handleLoadChats(chat, index)}/>
+              <Button key={chat._id} active={index === selectedChat} leftIcon={<AiOutlineMessage/>} title={`${chat.title}`} onClick={() => handleLoadChats(chat, index)}/>
           ))
           :
             null
           }
         </History>
         <Options>
-          <Button onClick={clearConversations} title={'Clear Conversations'} leftIcon={<AiOutlineDelete/>}/>
-          <Button title={'Upgrade to Plus'} leftIcon={<AiOutlineUser/>}/>
+          <Button onClick={clearConversations} title={'Clear All Chats'} leftIcon={<AiOutlineDelete/>}/>
           <Button title={'Settings'} leftIcon={<AiOutlineSetting/>}/>
           <Button title={'Log out'} onClick={handleLogout} leftIcon={<AiOutlineLogout/>}/>
         </Options>
       </MenuBar>
       <ChatContainer>
-        <ChatAnswers id='answers'>
+        <ChatAnswers ref={autoScrollRef}>
           {messages.length !== 0 ? 
             <ChatMessages messages={messages}/>
           :
-            <ChatExamples setInputValue={setInputValue}/>
+            <ChatExamples presetInputValue={setInputValue}/>
           }
         </ChatAnswers>
         <ChatInput>
           <div>
-            <textarea value={inputValue} onChange={(e) => setInputValue(e.target.value)} onInput={autoResize} placeholder='Send Message...'></textarea>
+            <textarea value={inputValue} onChange={(event) => setInputValue(event.target.value)} style={{height: inputHeight}} onInput={autoResize} placeholder='Send Message...'></textarea>
             {loading ? <Button isValid={!loading} variant={'sendbutton'} title={<Spinner style={{fontSize: '32px'}} animation="border" variant="light" />}/>  : <Button onClick={handleInput} variant={'sendbutton'} title={'Send'} leftIcon={<AiOutlineSend/>}/> }
           </div>
         </ChatInput>
