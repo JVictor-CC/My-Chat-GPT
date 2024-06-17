@@ -1,5 +1,16 @@
 import express from 'express'
-import { createChat, loginUser, registerUser, sendMessage, deleteUser, loadChats, authenticate, getUser, deleteChats, deleteAllChats } from '../controllers/controller.js'
+import {
+  createChat,
+  loginUser,
+  registerUser,
+  sendMessage,
+  deleteUser,
+  loadChats,
+  authenticate,
+  getUser,
+  deleteChats,
+  deleteAllChats,
+} from '../controllers/controller.js'
 
 const router = express.Router()
 

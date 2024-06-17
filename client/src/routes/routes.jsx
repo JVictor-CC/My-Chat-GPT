@@ -6,24 +6,22 @@ import Chat from '../pages/Chat'
 import Register from '../pages/Register'
 
 const router = createBrowserRouter([
-    {
-        path:'/',
-        element: <Login />
-    },
-    {
-        path:'chat',
-        element: <Chat />
-    },
-    {
-      path:'register',
-      element: <Register/>
-    }
+  {
+    path: '/',
+    element: <Login />,
+  },
+  {
+    path: 'chat',
+    element: <Chat />,
+  },
+  {
+    path: 'register',
+    element: <Register />,
+  },
 ])
 
 const MyRoutes = () => {
-  return (
-    <RouterProvider router={router}/>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default MyRoutes

@@ -1,15 +1,31 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Container, ChatContainer, MenuBar, History, Options, ChatAnswers, ChatInput } from './style'
 import ChatExamples from '../../components/ChatExamples'
-import { AiOutlinePlus, AiOutlineDelete, AiOutlineLogout, AiOutlineSetting, AiOutlineMessage, AiOutlineSend } from 'react-icons/ai'
 import Button from '../../components/Button'
 import ChatMessages from '../../components/ChatMessages'
 import { useNavigate } from 'react-router-dom'
 import Spinner from 'react-bootstrap/Spinner'
 import { createChat, deleteAllChats, loadChats, sendMessage } from '../../services/chat'
 
-const Chat = () => {
+import {
+  AiOutlinePlus,
+  AiOutlineDelete,
+  AiOutlineLogout,
+  AiOutlineSetting,
+  AiOutlineMessage,
+  AiOutlineSend,
+} from 'react-icons/ai'
 
+import {
+  Container,
+  ChatContainer,
+  MenuBar,
+  History,
+  Options,
+  ChatAnswers,
+  ChatInput,
+} from './style'
+
+const Chat = () => {
   const navigate = useNavigate()
 
   const [inputValue, setInputValue] = useState('')
@@ -25,15 +41,14 @@ const Chat = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('userToken')
-    loadChats(token)
-    .then(data => {
+    loadChats(token).then((data) => {
       setChats(data)
       setChatCount(data.length)
     })
   }, [])
 
   function autoResize(event) {
-    if (event.target.scrollHeight < 130 & event.target.scrollHeight >= 60) {
+    if ((event.target.scrollHeight < 130) & (event.target.scrollHeight >= 60)) {
       setInputHeight(`${event.target.scrollHeight}px`)
     }
   }
@@ -47,7 +62,7 @@ const Chat = () => {
   }
 
   async function handleInput() {
-    if(inputValue.length !== 0){
+    if (inputValue.length !== 0) {
       try {
         const token = localStorage.getItem('userToken')
         setLoading(true)
@@ -55,8 +70,12 @@ const Chat = () => {
         setMessages([...messages, newMessage])
         setInputValue('')
         autoScroll()
+        console.log(selectedChat)
+        console.log(token)
+        console.log(newMessage)
         const response = await sendMessage(token, newMessage, selectedChat)
-        const responseMessage = {text: response.data.data, sender: 'fake-gpt'}
+        console.log(response)
+        const responseMessage = { text: response.data.data, sender: 'my_chat' }
         setMessages([...messages, newMessage, responseMessage])
         autoScroll()
       } catch (error) {
@@ -64,7 +83,7 @@ const Chat = () => {
       } finally {
         setLoading(false)
       }
-    } 
+    }
   }
 
   function loadMessages(chat) {
@@ -84,7 +103,7 @@ const Chat = () => {
     clearScreen()
   }
 
-  async function handleNewChat () {
+  async function handleNewChat() {
     clearScreen()
     const token = localStorage.getItem('userToken')
     const data = await createChat(token, `Chat ${chatCount}`)
@@ -93,7 +112,7 @@ const Chat = () => {
     setSelectedChat(chatCount)
   }
 
-  async function handleLoadChats (chat, index) {
+  async function handleLoadChats(chat, index) {
     loadMessages(chat)
     setSelectedChat(index)
     const token = localStorage.getItem('userToken')
@@ -110,34 +129,66 @@ const Chat = () => {
     <Container>
       <MenuBar>
         <History>
-          <Button onClick={handleNewChat} variant={'newchat'} title={'New Chat'} leftIcon={<AiOutlinePlus/>}/>
+          <Button
+            onClick={handleNewChat}
+            variant={'newchat'}
+            title={'New Chat'}
+            leftIcon={<AiOutlinePlus />}
+          />
           <br />
-          { chats && chats.length !== 0 ? 
-            chats.map((chat, index) => (
-              <Button key={chat._id} active={index === selectedChat} leftIcon={<AiOutlineMessage/>} title={`${chat.title}`} onClick={() => handleLoadChats(chat, index)}/>
-          ))
-          :
-            null
-          }
+          {chats && chats.length !== 0
+            ? chats.map((chat, index) => (
+                <Button
+                  key={chat._id}
+                  active={index === selectedChat}
+                  leftIcon={<AiOutlineMessage />}
+                  title={`${chat.title}`}
+                  onClick={() => handleLoadChats(chat, index)}
+                />
+              ))
+            : null}
         </History>
         <Options>
-          <Button onClick={clearConversations} title={'Clear All Chats'} leftIcon={<AiOutlineDelete/>}/>
-          <Button title={'Settings'} leftIcon={<AiOutlineSetting/>}/>
-          <Button title={'Log out'} onClick={handleLogout} leftIcon={<AiOutlineLogout/>}/>
+          <Button
+            onClick={clearConversations}
+            title={'Clear All Chats'}
+            leftIcon={<AiOutlineDelete />}
+          />
+          <Button title={'Settings'} leftIcon={<AiOutlineSetting />} />
+          <Button title={'Log out'} onClick={handleLogout} leftIcon={<AiOutlineLogout />} />
         </Options>
       </MenuBar>
       <ChatContainer>
         <ChatAnswers ref={autoScrollRef}>
-          {messages.length !== 0 ? 
-            <ChatMessages messages={messages}/>
-          :
-            <ChatExamples presetInputValue={setInputValue}/>
-          }
+          {messages.length !== 0 ? (
+            <ChatMessages messages={messages} />
+          ) : (
+            <ChatExamples presetInputValue={setInputValue} />
+          )}
         </ChatAnswers>
         <ChatInput>
           <div>
-            <textarea value={inputValue} onChange={(event) => setInputValue(event.target.value)} style={{height: inputHeight}} onInput={autoResize} placeholder='Send Message...'></textarea>
-            {loading ? <Button isValid={!loading} variant={'sendbutton'} title={<Spinner style={{fontSize: '32px'}} animation="border" variant="light" />}/>  : <Button onClick={handleInput} variant={'sendbutton'} title={'Send'} leftIcon={<AiOutlineSend/>}/> }
+            <textarea
+              value={inputValue}
+              onChange={(event) => setInputValue(event.target.value)}
+              style={{ height: inputHeight }}
+              onInput={autoResize}
+              placeholder="Send Message..."
+            ></textarea>
+            {loading ? (
+              <Button
+                isValid={!loading}
+                variant={'sendbutton'}
+                title={<Spinner style={{ fontSize: '32px' }} animation="border" variant="light" />}
+              />
+            ) : (
+              <Button
+                onClick={handleInput}
+                variant={'sendbutton'}
+                title={'Send'}
+                leftIcon={<AiOutlineSend />}
+              />
+            )}
           </div>
         </ChatInput>
       </ChatContainer>

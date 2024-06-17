@@ -1,16 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { GlobalStyle } from './styles/global.style';
-
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import { GlobalStyle } from './styles/global.style'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
     <GlobalStyle />
     <ToastContainer />
     <App />
   </React.StrictMode>
-);
+)
