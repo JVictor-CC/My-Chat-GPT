@@ -56,7 +56,6 @@ export async function deleteAllChats(token) {
 
 export async function sendMessage(token, message, selectedChat) {
   try {
-    console.log(selectedChat)
     const response = await axios.post(
       'http://localhost:8080/sendMessage',
       {

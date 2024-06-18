@@ -1,4 +1,4 @@
-import { openai } from '../services/api.js'
+import { makeInference } from '../services/api.js'
 import UserModel from '../models/User.model.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -87,47 +87,30 @@ export const sendMessage = async (req, res) => {
     const userEmail = req.user.email
     const prompt = req.body.message
     const chatIndex = req.body.chatIndex
-    const chatName = req.body.chatName
     const user = await UserModel.findOne({ email: userEmail })
-
-    if (chatIndex === null) {
-      user.chats.push({
-        title: `${chatName}`,
-        messages: [],
-      })
-      user.save()
-    }
 
     user.chats[chatIndex].messages.push({
       text: `${prompt}`,
       sender: 'user',
     })
 
-    const response = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `${prompt}`,
-      temperature: 0.7,
-      max_tokens: 3500,
-      top_p: 1,
-      frequency_penalty: 0.5,
-      presence_penalty: 0,
-    })
+    const response = await makeInference(prompt)
 
     user.chats[chatIndex].messages.push({
-      text: `${response.data.choices[0].text}`,
-      sender: 'fake-gpt',
+      text: `${response}`,
+      sender: 'my-gpt',
     })
 
     await user.save()
 
     return res.status(200).json({
       success: true,
-      data: `${response.data.choices[0].text}`,
+      data: `${response}`,
     })
   } catch (error) {
     return res.status(400).json({
       success: false,
-      error: error.response ? error.response.data : 'Ocorreu um erro no servidor',
+      error: error,
     })
   }
 }
