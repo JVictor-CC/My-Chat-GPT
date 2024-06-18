@@ -32,7 +32,7 @@ const Chat = () => {
   const [messages, setMessages] = useState([])
   const [chats, setChats] = useState([])
   const [chatCount, setChatCount] = useState(0)
-  const [selectedChat, setSelectedChat] = useState()
+  const [selectedChat, setSelectedChat] = useState(0)
   const [loading, setLoading] = useState(false)
 
   const [inputHeight, setInputHeight] = useState('auto')
@@ -44,6 +44,10 @@ const Chat = () => {
     loadChats(token).then((data) => {
       setChats(data)
       setChatCount(data.length)
+      if (data.length > 0) {
+        setSelectedChat(0)
+        setMessages(data[0].messages)
+      }
     })
   }, [])
 
@@ -64,17 +68,16 @@ const Chat = () => {
   async function handleInput() {
     if (inputValue.length !== 0) {
       try {
+        if (chatCount === 0) {
+          await handleNewChat()
+        }
         const token = localStorage.getItem('userToken')
         setLoading(true)
         const newMessage = { text: inputValue, sender: 'user' }
         setMessages([...messages, newMessage])
         setInputValue('')
         autoScroll()
-        console.log(selectedChat)
-        console.log(token)
-        console.log(newMessage)
         const response = await sendMessage(token, newMessage, selectedChat)
-        console.log(response)
         const responseMessage = { text: response.data.data, sender: 'my_chat' }
         setMessages([...messages, newMessage, responseMessage])
         autoScroll()
@@ -108,6 +111,7 @@ const Chat = () => {
     const token = localStorage.getItem('userToken')
     const data = await createChat(token, `Chat ${chatCount}`)
     setChats(data)
+    console.log(data)
     setChatCount(data.length)
     setSelectedChat(chatCount)
   }
