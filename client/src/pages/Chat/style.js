@@ -27,12 +27,11 @@ export const ChatAnswers = styled.div`
 
 export const ChatInput = styled.div`
   width: 100%;
-  height: 220px;
-  background-color: lightgray;
+  height: 180px;
+  background-color: #e9e9f2;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 0px 5px 2px gray;
 
   div {
     display: flex;

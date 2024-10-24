@@ -5,9 +5,6 @@ export const Container = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
   background-image: url(${background});
   background-size: cover;
   background-repeat: no-repeat;
@@ -17,12 +14,16 @@ export const Container = styled.div`
 `
 export const LoginScreenBox = styled.div`
   border-radius: 5px;
-  width: 550px;
-  height: fit-content;
+  min-width: 450px;
+  height: 100%;
+  overflow: hidden;
   padding: 30px;
   background-color: #202123;
   box-shadow: 0px 0px 10px 2px #000;
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   h1 {
     text-transform: capitalize;
@@ -44,11 +45,18 @@ export const LoginScreenBox = styled.div`
   }
 `
 
-export const Title = styled.h1`
-  color: #fff;
-  margin: 80px 0 60px 0;
-  font-size: 64px;
-  text-shadow: 0 0 10px #ff9900;
+export const Title = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    color: #fff;
+    font-size: 96px;
+    text-shadow: 0 0 10px #ff9900;
+  }
 `
 
 export const Center = styled.div`

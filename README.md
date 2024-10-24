@@ -13,10 +13,12 @@ My Chat GPT is a web chat application designed for single-user interactions, lev
 ## Technologies Used
 
 ### Frontend
+
 - [ReactJS](https://reactjs.org/)
 - [styled-components](https://styled-components.com/)
 
 ### Backend
+
 - [Node.js](https://nodejs.org/)
 - [Express.js](https://expressjs.com/)
 - [CORS](https://www.npmjs.com/package/cors)
@@ -45,6 +47,7 @@ npm install
 cd ../backend
 npm install
 ```
+
 ## Backend Configuration
 
 Make sure to set up the required environment variables in the backend to access the OpenAI API and connect to MongoDB.
@@ -53,9 +56,9 @@ Example .env file
 ```
 OPENAI_API_KEY=your_openai_api_key
 MONGODB_ATLAS_URI=your_mongodb_uri
-PORT=5000
+PORT=8080
+JWT_SECRET=jwt_secret
 ```
-
 
 ## Usage
 
@@ -81,8 +84,8 @@ http://localhost:3000
 
 Contributing
 
-* Fork the project
-* Create a branch for your feature (git checkout -b feature/new-feature)
-* Commit your changes (git commit -am 'Add new feature')
-* Push to the branch (git push origin feature/new-feature)
-* Open a Pull Request
+- Fork the project
+- Create a branch for your feature (git checkout -b feature/new-feature)
+- Commit your changes (git commit -am 'Add new feature')
+- Push to the branch (git push origin feature/new-feature)
+- Open a Pull Request

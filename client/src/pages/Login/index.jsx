@@ -37,7 +37,6 @@ const Login = () => {
 
   return (
     <Container>
-      <Title>My Chat</Title>
       <LoginScreenBox>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Center>
@@ -82,6 +81,9 @@ const Login = () => {
           )}
         </form>
       </LoginScreenBox>
+      <Title>
+        <h1>My Chat</h1>
+      </Title>
     </Container>
   )
 }

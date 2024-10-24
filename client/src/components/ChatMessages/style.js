@@ -10,25 +10,29 @@ export const MessageContainer = styled.div`
   ${({ variant }) =>
     variant === 'user' &&
     css`
-      background-color: lightgray;
-      border-top: solid 1px gray;
-      border-bottom: solid 1px gray;
+      div {
+        background-color: #e9e9f2;
+      }
     `}
 
   div {
     width: 100%;
     max-width: 800px;
-    margin: 20px;
+    margin-top: 15px;
     display: flex;
+    padding: 5px;
+    border-radius: 5px;
   }
 
   span {
-    padding-inline-end: 10px;
+    padding-inline: 5px;
     font-size: 25px;
   }
 
   p {
     white-space: pre-wrap;
     word-wrap: break-word;
+    width: 100%;
+    padding: 5px;
   }
 `

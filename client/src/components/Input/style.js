@@ -8,10 +8,11 @@ export const InputLabel = styled.label`
 `
 
 export const InputContainer = styled.div`
-  margin: 10px 0;
+  margin: 5px 0;
   width: 100%;
-  height: 50px;
+  height: 40px;
   background-color: #d5d6e0;
+  position: relative;
 
   display: flex;
   justify-content: center;
@@ -27,37 +28,40 @@ export const InputContainer = styled.div`
 `
 
 export const IconContainer = styled.div`
-  padding: 7px;
+  height: 100%;
   font-size: 20px;
   color: #66645d;
   margin: 0;
+  padding: 2px;
 
   background-color: #fff;
-  border: solid 3px #d5d6e0;
-  border-radius: 6px;
 `
 
 export const DisplayError = styled.div`
-  position: relative;
-  height: 30px;
-  top: -9.5px;
-  background-color: #3b2f30;
+  position: absolute;
+  height: 20px;
+  padding-left: 5px;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #421d21;
   border-radius: 0 0 5px 5px;
   color: #fff;
   transition: 0.5s;
+  overflow: hidden;
+  z-index: 1;
 
   ${({ variant }) =>
     variant === 'nodisplay' &&
     css`
-      height: 0px;
-      overflow: hidden;
+      height: 0;
       padding: 0;
       transform: scaleY(0);
     `}
 
   p {
     font-size: 14px;
-    transform: translate(4%, 35%) scaleY(1);
+    transform: translateY(0);
     transition: transform 0.5s;
   }
 `

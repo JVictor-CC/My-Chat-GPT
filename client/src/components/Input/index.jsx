@@ -23,14 +23,14 @@ const Input = ({
           placeholder={placeHolder}
           {...register(registerName)}
         />
+        {errorMessage ? (
+          <DisplayError variant="">
+            <p>{errorMessage}</p>
+          </DisplayError>
+        ) : (
+          <DisplayError variant="nodisplay"></DisplayError>
+        )}
       </InputContainer>
-      {errorMessage ? (
-        <DisplayError variant="">
-          <p>{errorMessage}</p>
-        </DisplayError>
-      ) : (
-        <DisplayError variant="nodisplay"></DisplayError>
-      )}
     </>
   )
 }

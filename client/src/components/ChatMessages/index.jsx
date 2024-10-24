@@ -8,15 +8,20 @@ const MessageBox = ({ text, type = '' }) => {
     <MessageContainer variant={type}>
       <div>
         {type === 'user' ? (
-          <span>
-            <AiOutlineUser />
-          </span>
+          <>
+            <p>{text}</p>
+            <span>
+              <AiOutlineUser />
+            </span>
+          </>
         ) : (
-          <span>
-            <DiAtom />
-          </span>
-        )}{' '}
-        <p>{text}</p>
+          <>
+            <span>
+              <DiAtom />
+            </span>
+            <p>{text}</p>
+          </>
+        )}
       </div>
     </MessageContainer>
   )
