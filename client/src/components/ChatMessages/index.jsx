@@ -1,7 +1,13 @@
 import React from 'react'
-import { MessageContainer } from './style'
+import { MessageContainer, MessageStructure } from './style'
 import { AiOutlineUser } from 'react-icons/ai'
 import { DiAtom } from 'react-icons/di'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
+const MarkdownRenderer = ({ content }) => {
+  return <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+}
 
 const MessageBox = ({ text, type = '' }) => {
   return (
@@ -12,11 +18,15 @@ const MessageBox = ({ text, type = '' }) => {
             <span>
               <AiOutlineUser />
             </span>
-            <p>{text}</p>
+            <MessageStructure>
+              <MarkdownRenderer content={text} />
+            </MessageStructure>
           </>
         ) : (
           <>
-            <p>{text}</p>
+            <MessageStructure>
+              <MarkdownRenderer content={text} />
+            </MessageStructure>
             <span>
               <DiAtom />
             </span>
