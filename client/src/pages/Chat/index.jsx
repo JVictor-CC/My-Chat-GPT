@@ -52,7 +52,7 @@ const Chat = () => {
   }, [])
 
   function autoResize(event) {
-    if ((event.target.scrollHeight < 130) & (event.target.scrollHeight >= 60)) {
+    if ((event.target.scrollHeight < 100) & (event.target.scrollHeight >= 50)) {
       setInputHeight(`${event.target.scrollHeight}px`)
     }
   }

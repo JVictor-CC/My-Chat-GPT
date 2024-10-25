@@ -55,7 +55,7 @@ export const ButtonContainer = styled.button`
     ${({ variant }) =>
     variant === 'sendbutton' &&
     css`
-      min-height: 50px;
+      min-height: 40px;
       flex-direction: row-reverse;
       justify-content: center;
       align-items: center;

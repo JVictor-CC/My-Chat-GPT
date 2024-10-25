@@ -9,17 +9,17 @@ const MessageBox = ({ text, type = '' }) => {
       <div>
         {type === 'user' ? (
           <>
-            <p>{text}</p>
             <span>
               <AiOutlineUser />
             </span>
+            <p>{text}</p>
           </>
         ) : (
           <>
+            <p>{text}</p>
             <span>
               <DiAtom />
             </span>
-            <p>{text}</p>
           </>
         )}
       </div>

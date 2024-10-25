@@ -14,6 +14,7 @@ export const ChatContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
 `
 
 export const ChatAnswers = styled.div`
@@ -27,11 +28,15 @@ export const ChatAnswers = styled.div`
 
 export const ChatInput = styled.div`
   width: 100%;
-  height: 180px;
+  max-width: 800px;
+  height: 100px;
+  padding: 4px 14px;
+  margin-bottom: 12px;
   background-color: #e9e9f2;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 4px;
 
   div {
     display: flex;
@@ -44,13 +49,12 @@ export const ChatInput = styled.div`
   textarea {
     width: 100%;
     height: 40px;
-    //max-height: 130px;
     border: solid 1px lightgray;
     border-radius: 5px;
+    padding: 2px 8px;
     margin-inline-end: 10px;
-    padding: 5px;
     transition: 0.5s;
-    box-shadow: 0px 0px 5px 2px gray;
+    box-shadow: 0px 0px 4px 2px lightgray;
     resize: none;
     outline: none;
 

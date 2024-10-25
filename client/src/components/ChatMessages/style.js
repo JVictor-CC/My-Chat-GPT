@@ -12,6 +12,7 @@ export const MessageContainer = styled.div`
     css`
       div {
         background-color: #e9e9f2;
+        max-width: 500px;
       }
     `}
 
